@@ -5,7 +5,7 @@ from pathlib import Path
 # Ensure project root is on sys.path when running tests from tests/ folder.
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from pawpal_system import init_pawpal_system, Owner, Constraints, Scheduler, Task
+from pawpal_system import init_pawpal_system, Owner, Constraints, Scheduler, Task, DBManager
 
 
 def test_task_mark_complete():
@@ -101,6 +101,60 @@ def test_scheduler_task_filter_by_pet_and_status():
     done_tasks = scheduler.get_tasks(status="done")
     assert len(done_tasks) == 1
     assert done_tasks[0].description == "Play Bella"
+
+
+def test_sort_by_time_returns_chronological():
+    system = init_pawpal_system(":memory:")
+    assert system["status"] == "initialized"
+
+    db = system["db"]
+    owner = Owner(owner_id="owner-test-4", name="Tester4", email="tester4@example.com", db=db)
+    pet = owner.add_pet({"name": "Milo", "type": "dog", "breed": "Beagle", "age": 3, "care_needs": {"walk": "daily"}})
+
+    constraints = Constraints(start_date=date.today(), end_date=date.today())
+    scheduler = Scheduler(owner, constraints, db)
+
+    t1 = scheduler.schedule_task(pet.pet_id, {"description": "Activity 1", "due_time": datetime(2026, 3, 30, 18, 0), "priority": "medium"})
+    t2 = scheduler.schedule_task(pet.pet_id, {"description": "Activity 2", "due_time": datetime(2026, 3, 30, 9, 0), "priority": "low"})
+    t3 = scheduler.schedule_task(pet.pet_id, {"description": "Activity 3", "due_time": datetime(2026, 3, 30, 12, 0), "priority": "high"})
+
+    sorted_tasks = scheduler.sort_by_time([t1, t2, t3])
+    assert [t.task_id for t in sorted_tasks] == [t2.task_id, t3.task_id, t1.task_id]
+
+
+def test_conflict_detection_detects_duplicate_times():
+    # Setup constraints and schedule for overlap detection.
+    constraints = Constraints(start_date=date.today(), end_date=date.today())
+    db = DBManager(":memory:")
+    owner = Owner(owner_id="owner-test-5", name="Tester5", email="tester5@example.com", db=db)
+    pet = owner.add_pet({"name": "Nala", "type": "cat", "breed": "Siamese", "age": 2, "care_needs": {"play": "daily"}})
+    scheduler = Scheduler(owner, constraints, db)
+
+    base_time = datetime(2026, 3, 30, 10, 0)
+    task_a = scheduler.schedule_task(pet.pet_id, {"description": "Task A", "due_time": base_time, "priority": "medium"})
+    task_b = scheduler.schedule_task(pet.pet_id, {"description": "Task B", "due_time": base_time, "priority": "high"})
+
+    # Overlap should be true for identical slot/duration default (30 minutes).
+    assert constraints.check_overlap(task_b, [task_a]) is True
+
+
+def test_greedy_priority_schedules_highest_priority_first():
+    system = init_pawpal_system(":memory:")
+    assert system["status"] == "initialized"
+
+    db = system["db"]
+    owner = Owner(owner_id="owner-test-6", name="Tester6", email="tester6@example.com", db=db)
+    pet = owner.add_pet({"name": "Ollie", "type": "cat", "breed": "Domestic", "age": 2, "care_needs": {"feed": "daily"}})
+    constraints = Constraints(start_date=date.today(), end_date=date.today())
+    scheduler = Scheduler(owner, constraints, db)
+
+    # Create three tasks at different priorities
+    t_low = Task(task_id="tlow", user_id=owner.owner_id, pet_id=pet.pet_id, description="Low", due_time=datetime(2026,3,30,10,0), priority="low")
+    t_high = Task(task_id="thigh", user_id=owner.owner_id, pet_id=pet.pet_id, description="High", due_time=datetime(2026,3,30,10,0), priority="high")
+    t_urgent = Task(task_id="turgent", user_id=owner.owner_id, pet_id=pet.pet_id, description="Urgent", due_time=datetime(2026,3,30,10,0), priority="urgent")
+
+    selected = scheduler.schedule_with_greedy_priority([t_low, t_high, t_urgent])
+    assert [t.task_id for t in selected] == ["turgent", "thigh", "tlow"]
 
 
 def test_recurring_task_recreates_next_occurrence():
