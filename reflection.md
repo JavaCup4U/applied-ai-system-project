@@ -45,13 +45,16 @@ One trade off is that it is fast and predictable but not globally optimal. It is
 **a. How you used AI**
 
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
+I used AI tools for asisstance with the designing and refactoring of issues I found as an issue with the app. Putting myself in the shoes of the user and trying to make an actual schedule and realizing what flaws the design I had initially thougt of had and used AI as a collaborator to assist with making the experience better for the user.
 - What kinds of prompts or questions were most helpful?
+The most helpful prompts were the ones that felt almost natural to ask after eperiencing the app as a user and asking how to make it better. 
 
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
+One moment I did not accpet an AI suggestion as is is where it it deciced on its own to start adding more features that were not in my original design and I felt were not necessary.
 - How did you evaluate or verify what the AI suggested?
-
+I looked over and read what it was suggesting and though about how it would affect the application on its own and whehter it woult actually be a good feature or expeerience for the user of the app.
 ---
 
 ## 4. Testing and Verification
@@ -59,13 +62,18 @@ One trade off is that it is fast and predictable but not globally optimal. It is
 **a. What you tested**
 
 - What behaviors did you test?
+I tested the task creation and retrieval behaviors.
+I also tested the filtering and sorting of tasks by the users preferences and constraints. 
+I tested the scenario where the owner owns multiple pets and how each task would be assigned to the correct pet.
 - Why were these tests important?
+They are important because they are the core behaviors of the app and if they don't work then the app doesn't funtion properly and could cause confustion for a user. 
 
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
+I am confident it works correctly but there are still kinks that need to be worked out and edge cases that were probably missed. 
 - What edge cases would you test next if you had more time?
-
+I would test the cases where there are multiple tasks being saved and the front end shows them but the back end is not saving after the edits or tasks are removed with the removal button. 
 ---
 
 ## 5. Reflection
@@ -73,11 +81,13 @@ One trade off is that it is fast and predictable but not globally optimal. It is
 **a. What went well**
 
 - What part of this project are you most satisfied with?
+I am satisfied with the overall core functionality of the app and how it allows users to create a task and assign it to a pet. 
 
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
-
+I would improve the Schedule generation for sure. It has some issues that need to be worked out and I would like it to be more accurate about the tasks and what it generates after a task is edited or removed. 
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+I learned that it takes a lot more than just zooming in on one specific area and that you have to consider a much larger picture when creating something even like a schedule generator. There is a lot of different factors to consider at every step. AI can be a great and helpful tool but it is not going to get everything right and as the designer/ engineer it is up to you to make the final decision on the process and testing to verify that it is the right way to go. 
