@@ -4,6 +4,12 @@ Original Goals and Capabilities:
 - Consider constraints (time available, priority, owner preferences)
 - Produce a daily plan and explain why it chose that plan
 
+# Demo Video
+
+<!-- To add your video: edit this file on GitHub.com, drag & drop your .mp4/.mov file into the editor, then replace the URL below with the generated link -->
+
+https://github.com/user-attachments/assets/your-video-id-here.mp4
+
 # Title and Summary
 The pawpal+ applied system is designed to assist pet owners in managing and creating schedules for their tasks. The system includes an agent that the user is able to chat with . The agent can obtain information from a knowledge base that contains pet care information based on the breed. 
 Pet information is an important part about being an owner and vital to the care of thier companion. Being informed about their needs is an important part of a pets lifesyle. The system is designed to be user friendly and provide an easy way for pet owners to easily manage their pets care and tasks. 
