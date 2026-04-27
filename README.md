@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 # PawPal+ (Module 2 Project) 
 Original Goals and Capabilities:
 - Track pet care tasks (walks, feeding, meds, enrichment, grooming, etc.)
@@ -6,9 +14,17 @@ Original Goals and Capabilities:
 
 # Demo Video
 
-<!-- To add your video: edit this file on GitHub.com, drag & drop your .mp4/.mov file into the editor, then replace the URL below with the generated link -->
 
-https://github.com/user-attachments/assets/your-video-id-here.mp4
+
+https://github.com/user-attachments/assets/20b3c380-3010-4e7f-b3a0-ab0925d9481c.mp4
+
+
+
+
+
+
+
+
 
 # Title and Summary
 The pawpal+ applied system is designed to assist pet owners in managing and creating schedules for their tasks. The system includes an agent that the user is able to chat with . The agent can obtain information from a knowledge base that contains pet care information based on the breed. 
