@@ -65,4 +65,9 @@ The agent is able to access the users current schedule and list out the current 
 - This system  gave me a better understanding of how to think about not only how should the agent respond, but also what tools does this model need and how should it use those tools and when? 
 - This project made me open my mind and changed how I think about AI developement and the systems that need to be in place to make the application work as intended and provide a good user experience along with a safe and reliable system. 
 
+# Limitations and Future Work
+- Limitations of the system include the fact that the knowledge base is static and does not grow, so the information provided to the user may become outdated or may not cover all possible questions a user might have. 
+- The system reads information in chunks using blank lines as separators, which may not always capture the most relevant information for a given query.
+- The AI could not be misused currently but there will be more testing for potential misuse and guardrails will be added as needed.
+- Future work could include implementing a more dynamic knowledge base that can be updated with new information, as well as improving the chunking method to better capture relevant information. Additionally, more guardrails could be implemented to prevent potential misuse of the system.
 
