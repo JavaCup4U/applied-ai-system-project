@@ -66,4 +66,3 @@ The agent is able to access the users current schedule and list out the current 
 - This project made me open my mind and changed how I think about AI developement and the systems that need to be in place to make the application work as intended and provide a good user experience along with a safe and reliable system. 
 
 
- I learned about RAG (Retrieval Augmented Generation) and how 
