@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import datetime, date
 from pawpal_system import DBManager, Owner, Constraints, Scheduler
+from ai_assistant import PawPalAgent, validate_input
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -54,7 +55,7 @@ if "last_removed_task" not in st.session_state:
     st.session_state.last_removed_task = None
 
 # Create tabs for better organization
-tab1, tab2, tab3, tab4 = st.tabs(["👤 Owner & Pets", "✓ Tasks", "📅 Schedule", "🐾 Debug"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["👤 Owner & Pets", "✓ Tasks", "📅 Schedule", "🤖 AI Assistant", "🐾 Debug"])
 
 # ====== TAB 1: OWNER & PETS ======
 with tab1:
@@ -381,8 +382,65 @@ with tab3:
                 st.info("No scheduled tasks found.")
 
 
-# ====== TAB 4: DEBUG ======
+# ====== TAB 4: AI ASSISTANT ======
 with tab4:
+    st.subheader("AI Pet Care Assistant")
+    st.caption("Ask for care advice, or say things like 'Set up a daily routine for my dog Max today'.")
+
+    if "ai_messages" not in st.session_state:
+        st.session_state.ai_messages = []
+    if "ai_logs" not in st.session_state:
+        st.session_state.ai_logs = []
+
+    # Display chat history
+    for msg in st.session_state.ai_messages:
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
+
+    # Show condensed action log
+    if st.session_state.ai_logs:
+        with st.expander("AI action log", expanded=False):
+            for line in st.session_state.ai_logs[-30:]:
+                st.text(line)
+
+    # Chat input
+    if prompt := st.chat_input("Ask about pet care or request tasks..."):
+        is_valid, err_msg = validate_input(prompt)
+        if not is_valid:
+            st.warning(err_msg)
+        elif pawpal["owner"] is None:
+            st.warning("Create an owner first in the Owner & Pets tab.")
+        else:
+            with st.chat_message("user"):
+                st.write(prompt)
+            st.session_state.ai_messages.append({"role": "user", "content": prompt})
+
+            with st.chat_message("assistant"):
+                with st.spinner("Thinking..."):
+                    # Build plain-text history (exclude current message)
+                    history = [
+                        {"role": m["role"], "content": m["content"]}
+                        for m in st.session_state.ai_messages[:-1]
+                        if isinstance(m["content"], str)
+                    ]
+                    agent = PawPalAgent(
+                        owner=pawpal["owner"],
+                        db=pawpal["db"],
+                        tasks=pawpal["tasks"],
+                    )
+                    response, logs = agent.chat(prompt, history[-10:])
+                st.write(response)
+                if logs:
+                    with st.expander("Actions taken", expanded=True):
+                        for line in logs:
+                            st.text(line)
+
+            st.session_state.ai_messages.append({"role": "assistant", "content": response})
+            st.session_state.ai_logs.extend(logs)
+
+
+# ====== TAB 5: DEBUG ======
+with tab5:
     st.subheader("Session State")
     st.write("Debug st.session_state.pawpal:")
     st.json(pawpal)
